@@ -1,4 +1,6 @@
 // import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'colors.dart' as color;
 
@@ -10,18 +12,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List info = [];
+  _initData() {
+    DefaultAssetBundle.of(context).loadString('json/info.json').then((value) {
+      info = json.decode(value);
+    });
+  }
+
+  void initstate() {
+    super.initState();
+    _initData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color.AppColor.homePageBackground,
       body: Container(
-        padding: const EdgeInsets.only(top: 60, left: 15, right: 15),
+        padding: const EdgeInsets.only(
+          top: 70,
+          left: 20,
+          right: 20,
+        ),
         child: Column(
           children: [
             Row(
               children: [
                 Text(
-                  "Traning",
+                  "Training",
                   style: TextStyle(
                     fontSize: 30,
                     color: color.AppColor.homePageTitle,
@@ -188,7 +206,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 5,
             ),
-            Container(
+            SizedBox(
               height: 180,
               width: MediaQuery.of(context).size.width,
               child: Stack(
@@ -225,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.only(
-                      right: 150,
+                      right: 200,
                       bottom: 30,
                     ),
                     decoration: BoxDecoration(
@@ -240,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     width: double.maxFinite,
                     height: 100,
-                    color: Colors.redAccent.withOpacity(0.3),
+                    // color: Colors.red,
                     margin: const EdgeInsets.only(
                       left: 150,
                       top: 50,
@@ -251,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           "You are doing great",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: color.AppColor.homePageDetail,
                           ),
@@ -261,17 +279,80 @@ class _HomePageState extends State<HomePage> {
                         ),
                         RichText(
                           text: TextSpan(
-                            text: "Keep it up",
+                            text: "Keep it up\n",
                             style: TextStyle(
                               color: color.AppColor.homePagePlanColor,
                               fontSize: 16,
                             ),
+                            children: const [
+                              TextSpan(text: "stick to your plan"),
+                            ],
                           ),
                         )
                       ],
                     ),
                   ),
                 ],
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "Area of foucs",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                    color: color.AppColor.homePageTitle,
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: info.length,
+                itemBuilder: (_, i) {
+                  return Row(
+                    children: [
+                      Container(
+                        height: 170,
+                        width: 200,
+                        padding: const EdgeInsets.only(bottom: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                            image: AssetImage(info[i]['img']),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 3,
+                              offset: const Offset(5, 5),
+                              color: color.AppColor.gradientSecond
+                                  .withOpacity(0.1),
+                            ),
+                            BoxShadow(
+                              blurRadius: 3,
+                              offset: const Offset(-5, -5),
+                              color: color.AppColor.gradientSecond
+                                  .withOpacity(0.1),
+                            )
+                          ],
+                        ),
+                        child: Center(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              info[i]['title'],
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: color.AppColor.homePageDetail),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                },
               ),
             ),
           ],
